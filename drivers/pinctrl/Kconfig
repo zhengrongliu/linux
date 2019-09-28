@@ -349,6 +349,18 @@ config PINCTRL_RK805
 	help
 	  This selects the pinctrl driver for RK805.
 
+config PINCTRL_AM335X
+	bool "Pinctrl driver for TI AM335x"
+	default y
+	depends on OF
+	depends on ARCH_AM335X
+	select GENERIC_PINCONF
+	select GENERIC_PINCTRL_GROUPS
+	select GENERIC_PINMUX_FUNCTIONS
+	select MFD_SYSCON
+	help
+	  This selects the pinctrl driver for ti am335x.
+
 source "drivers/pinctrl/aspeed/Kconfig"
 source "drivers/pinctrl/bcm/Kconfig"
 source "drivers/pinctrl/berlin/Kconfig"

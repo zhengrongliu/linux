@@ -1,0 +1,440 @@
+/*
+ * beaglebone.dts
+ *
+ *  Created on: Feb 6, 2018
+ *      Author: Zhengrong Liu<towering@126.com>
+ */
+
+/dts-v1/;
+#include "skeleton.dtsi"
+/ {
+        model = "TI Beaglebone board";
+        compatible = "ti,am335x";
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+        chosen {
+                bootargs = "earlyprintk rdinit=/sbin/init debug";
+                stdout-path = "serial0:115200n8";
+        };
+
+	memory@8000000 {
+		device_type = "memory";
+                reg = <0x80000000 0x10000000>; /* 256 MB */
+        };
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "simple-bus";
+		ranges;
+		interrupt-parent = <&intc>;
+
+		intc:interrupt-controller@48200000{
+			compatible = "ti,am335x-intc";
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			reg = <0x48200000 0x200>;
+		};
+
+		edma:dma@49000000{
+			compatible = "ti,am335x-edma";
+			reg = <0x49000000 0x10000>;
+			interrupts = <12 1>,<13 1>,<14 1>;
+			interrupt-names = "ccint","mpint","errint";
+			dma-requests = <64>;
+			#dma-cells = <1>;
+			clocks = <&l3f_gclk>;
+			clock-names = "fclk";
+		};
+
+
+		timer0:timer@44e05000{
+			compatible = "ti,am335x-timer";
+			reg = <0x44e05000 0x60>;
+			interrupts = <66 0>;
+			status = "disabled";
+		};
+
+		timer2:timer@48040000{
+			compatible = "ti,am335x-timer";
+			reg = <0x48040000 0x1000>;
+			interrupts = <68 0>;
+			clocks = <&timer2_gfclk>;
+			clock-names = "fclk";
+		};
+
+		uart0:serial@44e09000{
+			compatible = "ti,am335x-uart";
+			reg = <0x44e09000 0x100>;
+			interrupts = <72 7>;
+			clocks = <&uart0_gfclk>;
+			clock-names = "fclk";
+			status = "disabled";
+		};
+
+		i2c0:i2c@44e0b000{
+			compatible = "ti,am335x-i2c";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x44e0b000 0x1000>;
+			interrupts = <70 6>;
+			clocks = <&i2c0_gfclk>;
+			clock-names = "fclk";
+			status = "disabled";
+		};
+
+		gpex:gpex_pcie@c0000000{
+			compatible = "pci-host-ecam-generic";
+			device_type = "pci";
+			#address-cells = <3>;
+			#size-cells = <2>;
+			bus-range = <0x0 0x1>;
+
+			reg = <0xc0000000 0x01000000>;
+			reg-names = "config";
+
+			ranges = <0x02000000 0x0 0xe0000000 0xe0000000 0x0 0x10000000>;
+			#interrupt-cells = <1>;
+			interrupt-map = <0x0 0x0 0x0 0x1 &intc 15 1
+					0x800 0x0 0x0 0x1 &intc 16 1
+					0x1000 0x0 0x0 0x1 &intc 17 1
+					0x1800 0x0 0x0 0x1 &intc 18 1>;
+			interrupt-map-mask = <0xf800 0x0 0x0  0x7>;
+		};
+/*
+		vhci:vhci@48000000{
+			compatible = "virtio,platform-vhci";
+			interrupts = <23 6>;
+			reg = <0x48000000 0x100>;
+			status = "okay";
+		};
+*/
+
+
+		mcasp0:mcasp@48038000 {
+			compatible = "ti,am335x-mcasp","syscon","simple-mfd";
+			#sound-dai-cells = <0>;
+			reg = <0x48038000 0x2000>;
+			reg-names = "mpu";
+			interrupts = <80 6>,<81 6>;
+			interrupt-names = "tx","rx";
+			clocks = <&mcasp0_gfclk>;
+			clock-names = "fclk";
+			status = "disabled";
+		};
+
+		mcasp1:mcasp@4803c000 {
+			compatible = "ti,am335x-mcasp";
+			#sound-dai-cells = <0>;
+			reg = <0x4803c000 0x2000>;
+			reg-names = "mpu";
+			interrupts = <82 6>,<83 6>;
+			interrupt-names = "tx","rx";
+			dmas = <&edma 10>,<&edma 11>;
+			dma-names = "tx","rx";
+			clocks = <&mcasp1_gfclk>;
+			clock-names = "fclk";
+			status = "disabled";
+		};
+
+		prcm:prcm@44e00000{
+			compatible = "ti,am335x-prcm","syscon","simple-mfd";
+			reg = <0x44e00000 0x2000>;
+
+		};
+
+		cm:cm@44e10000{
+			compatible = "ti,am335x-cm","syscon","simple-mfd";
+			reg = <0x44e10000 0x2000>;
+
+			pinctrl:pinctrl{
+				compatible = "ti,am335x-pinctrl";
+				syscon = <&cm>;
+			};
+
+		};
+		
+
+	};
+	
+	sound:sound{
+	};
+
+	clocks:clocks {
+		osc_rc32:osc_rc32{
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <32768>;
+		};
+		
+	};
+
+};
+
+&clocks{
+
+	dpll_core_clk:dpll_core_clk{
+		compatible = "ti,am335x-clk-core-pll";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&xtal_main>;
+	};
+
+	dpll_core_m4_clk:dpll_core_m4_clk{
+		compatible = "ti,am335x-clk-core-pll-clkout";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&dpll_core_clk>;
+
+		ti,reg = <0x480> ;
+
+		assigned-clocks = <&dpll_core_m4_clk>;
+		assigned-clock-rates = <200000000>;
+	};
+
+	l3f_gclk:l3f_gclk{
+		compatible = "ti,am335x-clk-gate";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&dpll_core_m4_clk>;
+		ti,reg = <0xc> ;
+		ti,gate-shift = <4>;
+
+	};
+
+        dpll_per_clk:dpll_per_clk{
+		compatible = "ti,am335x-clk-per-pll";
+		#clock-cells  = <0>;
+		syscon = <&prcm>;
+		clocks = <&xtal_main>;
+        };
+
+
+
+
+
+	dpll_per_clkout:dpll_per_clkout{
+		compatible = "ti,am335x-clk-per-pll-clkout";
+		#clock-cells  = <0>;
+		syscon = <&prcm>;
+		clocks = <&dpll_per_clk>;
+
+		assigned-clocks = <&dpll_per_clk>;
+		assigned-clock-rates = <960000000>;
+	};
+
+	dpll_per_96M_clk:dpll_per_96M_clk{
+		compatible = "fixed-factor-clock";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clock-div = <2>;
+		clock-mult = <1>;
+		clocks = <&dpll_per_clkout>;
+
+		assigned-clocks = <&dpll_per_clkout>;
+		assigned-clock-rates = <192000000>;
+	};
+	dpll_per_48M_clk:dpll_per_48M_clk{
+		compatible = "fixed-factor-clock";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clock-div = <4>;
+		clock-mult = <1>;
+		clocks = <&dpll_per_clkout>;
+	};
+
+	dpll_per_24M_clk:dpll_per_24M_clk{
+		compatible = "fixed-factor-clock";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clock-div = <2>;
+		clock-mult = <1>;
+		clocks = <&dpll_per_48M_clk>;
+	};
+
+	i2c0_gfclk:i2c0_gfclk{
+		compatible = "ti,am335x-clk-ctrl";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&dpll_per_48M_clk>;
+		ti,reg = <0x4b8>;
+	};
+
+	uart0_gfclk:uart0_gfclk{
+		compatible = "ti,am335x-clk-ctrl";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&dpll_per_48M_clk>;
+		ti,reg = <0x4b4>;
+	};
+
+	mcasp0_gfclk:mcasp0_gfclk{
+		compatible = "ti,am335x-clk-ctrl";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&xtal_main>;
+		ti,reg = <0x34>;
+	};
+
+	mcasp1_gfclk:mcasp1_gfclk{
+		compatible = "ti,am335x-clk-ctrl";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&xtal_main>;
+		ti,reg = <0x68>;
+	};
+
+
+
+	timer2_gfclk:timer2_gfclk{
+		compatible = "ti,am335x-clk-gate";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks = <&timer2_fclk>;
+		ti,reg = <0x0> ;
+		ti,gate-shift = <14>;
+
+		assigned-clocks = <&timer2_fclk>;
+		assigned-clock-parents = <&cm_32K_clk>;
+		
+	};
+
+	timer2_fclk:timer2_fclk{
+		compatible = "ti,am335x-clk-mux";
+		#clock-cells = <0>;
+		syscon = <&prcm>;
+		clocks  = <&ext_tclkin>,<&xtal_main>,<&cm_32K_clk>;
+		ti,reg = <0x508 0x4>;
+		ti,mux-shift = <0>;
+		ti,mux-width = <1>;
+
+		assigned-clocks = <&cm_32K_clk>;
+		assigned-clock-rates = <32768>;
+	};
+
+
+};
+
+&clocks{
+	cm_32K_clk:cm_32K_clk{
+		compatible = "ti,am335x-clk-32K";
+		#clock-cells = <0>;
+		syscon = <&cm>;
+		clocks = <&dpll_per_24M_clk>;
+	};
+
+};
+
+&pinctrl{
+	pinctrl-names = "default";
+	pinctrl-0 = <&hog_pins>;
+
+
+	hog_pins:hog_pins{
+
+	};
+
+	uart0_pins:uart0_pins{
+		txd_pin{
+			pins = "uart0_txd";
+			function = "uart0_txd";
+			ti,pin-mode = <0>;
+		};
+		rxd_pin{
+			pins = "uart0_rxd";
+			function = "uart0_rxd";
+			ti,pin-mode = <0>;
+			input-enable;
+		};	
+	};
+
+	mcasp1_pins:mcasp1_pins{
+	};
+	i2c0_pins:i2c0_pins{
+		scl_pin {
+			pins = "i2c0_scl";
+			function = "i2c0_scl";
+			ti,pin-mode = <0>;
+			input-enable;
+			bias-pull-up;
+		};
+		sda_pin {
+			pins = "i2c0_sda";
+			function = "i2c0_sda";
+			ti,pin-mode = <0>;
+			input-enable;
+			bias-pull-up;
+		};
+	};
+};
+
+
+&i2c0{
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pins>;
+
+	clock-frequency = <400000>;
+
+	status = "okay";
+
+	
+	tlv320aic3106:tlv320aic3106@1b{
+		#sound-dai-cells = <0>;
+		compatible = "ti,tlv320aic3106";
+		reg = <0x1b>;
+	};
+};
+
+&mcasp1{
+	pinctrl-names = "default";
+	pinctrl-0 = <&mcasp1_pins>;
+	status = "okay";
+};
+
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins>;
+	status = "okay";
+};
+
+&sound{
+	compatible = "simple-audio-card";
+	simple-audio-card,name = "on-board";
+	simple-audio-card,dai-link@1 {
+		dai-tdm-slot-num = <2>;
+		dai-tdm-slot-tx-mask = <0 0 1 0>;
+		dai-tdm-slot-rx-mask = <0 0 0 1>;
+		cpu {
+			sound-dai = <&mcasp1>;
+		};
+		codec {
+			sound-dai = <&tlv320aic3106>;
+		};
+	};
+
+};
+
+&clocks{
+	xtal_main:xtal_main {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
+	xtal_rtc:xtal_rtc{
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+	};
+
+	ext_tclkin:ext_tclkin{
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+};
+

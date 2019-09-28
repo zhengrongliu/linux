@@ -615,4 +615,22 @@ config CLKSRC_ST_LPC
 	  Enable this option to use the Low Power controller timer
 	  as clocksource.
 
+config CLKSRC_AT91SAM9_PIT
+	bool "Clocksource for at91sam9"
+	depends on ARCH_AT91SAM9
+	select GENERIC_CLOCKEVENTS
+	select CLKSRC_OF
+	default y
+	help 
+	  Support for the at91sam9 clocksource.
+
+config CLKSRC_AM335X
+	bool "Clocksource for amm335x"
+	depends on ARCH_AM335X
+	select GENERIC_CLOCKEVENTS
+	select CLKSRC_OF
+	default y
+	help
+	  Support for the am335x clocksource.
+
 endmenu

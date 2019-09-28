@@ -394,6 +394,38 @@ config USB_MAX3421_HCD
 	  To compile this driver as a module, choose M here: the module will
 	  be called max3421-hcd.
 
+config USB_VHCI_HCD
+	tristate "VHCI HCD (virtual usb host) support"
+	depends on USB
+	---help---
+	  The Virtual Host Controller Interface (VHCI) is a standard for accessing 
+	  USB virtual host controller.
+	
+	  To compile this driver as a module, choose M here: 
+	  the module will be called vhci-hcd
+
+if USB_VHCI_HCD
+
+config USB_VHCI_HCD_PLATFORM
+	tristate "VHCI driver for a platform device"
+	default n
+	---help---
+	  Adds a VHCI host driver for a generic platform device,which
+	  provides a memory space and an irq.
+		
+	  If unsure, say N.
+
+config USB_VHCI_HCD_PCI
+	tristate "VHCI driver for a pci device"
+	depends on USB_PCI
+	default n
+	---help---
+	  Adds an VHCI host driver for a pci device.
+	
+	  If unsure, say N
+
+endif #USB_VHCI_HCD
+
 config USB_OHCI_HCD
 	tristate "OHCI HCD (USB 1.1) support"
 	depends on HAS_DMA && HAS_IOMEM

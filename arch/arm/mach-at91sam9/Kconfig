@@ -1,0 +1,9 @@
+config ARCH_AT91SAM9
+        bool "ATMEL AT91SAM9 soc family"
+	depends on ARCH_MULTI_V5
+        select MULTI_IRQ_HANDLER
+        select SPARSE_IRQ
+        select CPU_ARM926T
+        select COMMON_CLK
+        help
+          support for the ATMEL AT91SAM9 family of processors	

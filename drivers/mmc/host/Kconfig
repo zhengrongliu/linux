@@ -900,3 +900,11 @@ config MMC_SDHCI_XENON
 	  This selects Marvell Xenon eMMC/SD/SDIO SDHCI.
 	  If you have a controller with this interface, say Y or M here.
 	  If unsure, say N.
+
+config MMC_AT91SAM9_MCI
+	tristate "AT91SAM9 SD/MMC Driver (Multimedia Card Interface)"
+	depends on ARCH_AT91SAM9
+	help
+	  This selects the ATMEL AT91SAM9 Multimedia Card Interface driver.
+
+

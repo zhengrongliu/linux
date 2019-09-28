@@ -1282,6 +1282,21 @@ choice
 		  If you have a ZC702 board and want early boot messages to
 		  appear on the USB serial adaptor, select this option.
 
+	config DEBUG_AT91SAM9_UART
+		bool "Kernel low-level debugging on AT91SAM9 UART(default DBGU)"
+		depends on ARCH_AT91SAM9.
+		help
+		  Say Y here if you want kernel low-level debugging support
+                  on the UART port of:
+                    at91sam9x5
+
+	config DEBUG_AM335X_UART
+		bool "Kernel low-level debugging on AM335X UART(default UART0)"
+		depends on ARCH_AM335X
+		help
+		  Say Y here if you want kernel low-level debugging support
+		  on the UART0 port of am335x.
+
 	config DEBUG_ICEDCC
 		bool "Kernel low-level debugging via EmbeddedICE DCC channel"
 		help
@@ -1468,6 +1483,8 @@ config DEBUG_LL_INCLUDE
 	default "debug/bcm63xx.S" if DEBUG_BCM63XX_UART
 	default "debug/digicolor.S" if DEBUG_DIGICOLOR_UA0
 	default "debug/brcmstb.S" if DEBUG_BRCMSTB_UART
+	default "debug/at91sam9.S" if DEBUG_AT91SAM9_UART
+	default "debug/am335x.S" if DEBUG_AM335X_UART
 	default "mach/debug-macro.S"
 
 # Compatibility options for PL01x
@@ -1597,6 +1614,8 @@ config DEBUG_UART_PHYS
 	default 0xffffee00 if DEBUG_AT91_SAM9263_DBGU
 	default 0xfffff200 if DEBUG_AT91_RM9200_DBGU
 	default 0xfffff700 if ARCH_IOP33X
+	default 0xfffff200 if DEBUG_AT91SAM9_UART
+	default 0x44e09000 if DEBUG_AM335X_UART
 	depends on ARCH_EP93XX || \
 	        DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
 		DEBUG_LL_UART_EFM32 || \
@@ -1610,7 +1629,8 @@ config DEBUG_UART_PHYS
 		DEBUG_S3C64XX_UART || \
 		DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
 		DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
-		DEBUG_AT91_UART
+		DEBUG_AT91_UART || DEBUG_AT91SAM9_UART || \
+		DEBUG_AM335X_UART
 
 config DEBUG_UART_VIRT
 	hex "Virtual base address of debug UART"
@@ -1715,6 +1735,8 @@ config DEBUG_UART_VIRT
 	default 0xfefff700 if ARCH_IOP33X
 	default 0xff003000 if DEBUG_U300_UART
 	default 0xffd01000 if DEBUG_HIP01_UART
+	default 0xf8fff200 if DEBUG_AT91SAM9_UART
+	default 0xf9e09000 if DEBUG_AM335X_UART
 	default DEBUG_UART_PHYS if !MMU
 	depends on DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
 		DEBUG_UART_8250 || DEBUG_UART_PL01X || DEBUG_MESON_UARTAO || \
@@ -1723,7 +1745,8 @@ config DEBUG_UART_VIRT
 		DEBUG_S3C64XX_UART || \
 		DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
 		DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
-		DEBUG_AT91_UART
+		DEBUG_AT91_UART || DEBUG_AT91SAM9_UART || \
+		DEBUG_AM335X_UART
 
 config DEBUG_UART_8250_SHIFT
 	int "Register offset shift for the 8250 debug UART"

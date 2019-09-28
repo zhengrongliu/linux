@@ -53,6 +53,8 @@ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
 obj-$(CONFIG_COMMON_CLK_VC5)		+= clk-versaclock5.o
 obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
 obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
+obj-$(CONFIG_COMMON_CLK_AT91SAM9)	+= clk-at91sam9-sckc.o clk-at91sam9-pmc.o
+obj-$(CONFIG_COMMON_CLK_AM335X)		+= clk-am335x-common.o clk-am335x-prcm.o clk-am335x-cm.o
 
 # please keep this section sorted lexicographically by directory path name
 obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/

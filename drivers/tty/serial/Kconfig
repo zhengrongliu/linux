@@ -1707,6 +1707,36 @@ config SERIAL_OWL_CONSOLE
 	  Say 'Y' here if you wish to use Actions Semiconductor S500/S900 UART
 	  as the system console.
 
+config SERIAL_AT91SAM9
+	tristate "AT91SAM9 serial port support"
+	select SERIAL_CORE
+	depends on ARCH_AT91SAM9
+	help
+	  This driver is for the on-chip Serial Controller on at91sam9
+	  If unsure, say N.
+
+config SERIAL_AT91SAM9_CONSOLE
+	bool "Support for console on ATMEL"
+	depends on SERIAL_AT91SAM9=y
+	select SERIAL_CORE_CONSOLE
+	help
+	  Say 'Y' here if you wish to use AT91SAM9 UART as the system console.
+
+config SERIAL_AM335X
+	tristate "TI AM335X serial port support"
+	select SERIAL_CORE
+	depends on ARCH_AM335X
+	help
+	  This driver is for the on-chip Serial Controller on am335x
+	  Is unsure, say N.
+
+config SERIAL_AM335X_CONSOLE
+	bool "Support for console on TI AM335X"
+	depends on SERIAL_AM335X=y
+	select SERIAL_CORE_CONSOLE
+	help
+	  Say 'Y' here if you wish to use AM335X UART as the system console.
+
 endmenu
 
 config SERIAL_MCTRL_GPIO

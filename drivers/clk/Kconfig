@@ -226,6 +226,23 @@ config COMMON_CLK_VC5
 	  This driver supports the IDT VersaClock 5 and VersaClock 6
 	  programmable clock generators.
 
+config COMMON_CLK_AT91SAM9
+	bool "Clock driver for ATMEL at91sam9 family"
+	depends on ARCH_AT91SAM9
+	select MFD_SYSCON
+	default y
+	help
+	  This driver supports the ATMEL AT91SAM9 programmable clock generator.
+
+config COMMON_CLK_AM335X
+	bool "Clock driver to TI am335x family"
+	depends on ARCH_AM335X
+	select MFD_SYSCON
+	default y
+	help
+	  This driver supports the TI AM335X programmable clock generator.
+
+
 source "drivers/clk/bcm/Kconfig"
 source "drivers/clk/hisilicon/Kconfig"
 source "drivers/clk/imgtec/Kconfig"

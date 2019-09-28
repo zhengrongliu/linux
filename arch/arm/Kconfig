@@ -854,6 +854,10 @@ source "arch/arm/mach-w90x900/Kconfig"
 
 source "arch/arm/mach-zx/Kconfig"
 
+source "arch/arm/mach-am335x/Kconfig"
+
+source "arch/arm/mach-at91sam9/Kconfig"
+
 source "arch/arm/mach-zynq/Kconfig"
 
 # ARMv7-M architecture

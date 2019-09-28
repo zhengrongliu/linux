@@ -94,6 +94,8 @@ obj-$(CONFIG_SERIAL_MVEBU_UART)	+= mvebu-uart.o
 obj-$(CONFIG_SERIAL_PIC32)	+= pic32_uart.o
 obj-$(CONFIG_SERIAL_MPS2_UART)	+= mps2-uart.o
 obj-$(CONFIG_SERIAL_OWL)	+= owl-uart.o
+obj-$(CONFIG_SERIAL_AT91SAM9)	+= serial-at91sam9.o
+obj-$(CONFIG_SERIAL_AM335X)	+= serial-am335x.o
 
 # GPIOLIB helpers for modem control lines
 obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o

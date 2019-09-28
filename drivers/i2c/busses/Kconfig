@@ -1326,4 +1326,12 @@ config I2C_ZX2967
 	  This driver can also be built as a module. If so, the module will be
 	  called i2c-zx2967.
 
+config I2C_AM335X
+	tristate "TI AM335X I2C support"
+	depends on ARCH_AM335X
+	default Y
+	help
+	  Selecting this option will add AM335X I2C driver.
+	  This driver can also be built as a module.If so, the module will be called i2c-am335x
+
 endmenu

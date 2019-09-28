@@ -321,3 +321,23 @@ config IRQ_UNIPHIER_AIDET
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Support for the UniPhier AIDET (ARM Interrupt Detector).
+
+config IRQ_AT91SAM9_AIC
+	bool "ATMEL at91sam9 soc irqchip support"
+	depends on ARCH_AT91SAM9
+	select IRQ_DOMAIN
+	select GENERIC_IRQ_CHIP
+	default y
+	help
+	  Say yes here to add support for the IRQ combiner devices embedded 
+	  in ATMEL at91sam9.
+
+config IRQ_AM335X
+	bool "TI am335x soc irqchip support"
+	depends on ARCH_AM335X
+	select IRQ_DOMAIN
+	select GENERIC_IRQ_CHIP
+	default y
+	help
+	  Say yes here to add support for the IRQ combiner devices embedded
+	  in TI AM335X.

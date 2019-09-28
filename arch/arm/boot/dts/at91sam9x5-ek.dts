@@ -1,0 +1,180 @@
+/*
+ * at91sam9x5-ek.dts
+ *
+ *  Created on: Jul 9, 2017
+ *      Author: Zhengrong Liu<towering@126.com>
+ */
+
+/dts-v1/;
+#include "skeleton.dtsi"
+#include <dt-bindings/interrupt-controller/irq.h>
+/ {
+	model = "ATMEL at91sam9x5-ek board";
+	compatible = "atmel,at91sam9x5";
+
+	aliases {
+		serial0 = &uart_dbgu;
+	};
+
+	chosen {
+
+		bootargs = "earlyprintk rdinit=/sbin/init";
+		stdout-path = "serial0:115200n8";
+	};
+
+
+	memory {
+		reg = <0x20000000 0x04000000>;
+	};
+
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "simple-bus";
+		ranges;
+		interrupt-parent = <&aic>;
+
+		aic:interrupt-controller@fffff000{
+			compatible = "atmel,at91sam9-aic";
+			interrupt-controller;
+			#interrupt-cells = <3>;
+			reg = <0xfffff000 0x200>;
+		};
+
+		pit:timer@fffffe30{
+			compatible = "atmel,at91sam9-pit";
+			reg = <0xfffffe30 0x10>;
+			clocks = <&mck_div>;
+			interrupts  = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+		};
+
+		uart_dbgu:serial@fffff200{
+			compatible = "atmel,at91sam9-uart";
+			reg = <0xfffff200 0x100>;
+			clocks = <&mck_div>;
+			interrupts  = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+		};
+
+		dma0:dma-controller@ffffec00 {
+			compatible = "atmel,at91sam9-dmac";
+			reg = <0xffffec00 0x200>;
+			interrupts = <20 IRQ_TYPE_LEVEL_HIGH 0>;
+			#dma-cells = <1>;
+		};
+
+		emac:ethernet@f802c000 {
+			compatible = "atmel,at91sam9-emac";
+			reg = <0xf802c000 0x100>;
+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH 0>;
+		};
+
+		hsmci0:mmc@f0008000{
+			compatible = "atmel,at91sam9-hsmci";
+			reg = <0xf0008000 0x600>;
+			interrupts  = <12 IRQ_TYPE_LEVEL_HIGH 6>;
+			dmas=<&dma0 0>;
+			dma-names = "rxtx";
+			
+		};
+#if 0
+		hsmci1:mmc@f000c000{
+			compatible = "atmel,at91sam9-hsmci";
+			reg = <0xf000c000 0x600>;
+			dmas=<&dma1 0>;
+			interrupts  = <26 IRQ_TYPE_LEVEL_HIGH 6>;
+		};
+#endif
+		sckc:sckc@fffffe50{
+			compatible = "atmel,at91sam9-sckc";
+			reg = <0xfffffe50 0x4>;
+
+			slow_osc:slow_osc{
+				compatible = "atmel,at91sam9-clk-slow-osc";
+				#clock-cells = <0>;
+				clocks = <&slow_xtal>;
+			};
+
+			slow_rc_osc:slow_rc_osc{
+				compatible = "atmel,at91sam9-clk-slow-rc-osc";
+				#clock-cells = <0>;
+				clock-frequency = <32000>;
+				clock-accuracy = <37500000>;
+			};
+			
+			slow_clk:slow_clk{
+				compatible = "atmel,at91sam9-clk-slow";
+				#clock-cells = <0>;
+				clocks = <&slow_rc_osc>,<&slow_osc>;
+			};
+		};
+
+		pmc:pmc@fffffc00{
+			compatible = "atmel,at91sam9-pmc","syscon";
+			reg = <0xfffffc00 0x200>;
+			
+			main_rc_osc:main_rc_osc{
+				compatible = "atmel,at91sam9-clk-main-rc-osc";
+				#clock-cells = <0>;
+				clock-frequency = <12000000>;
+				clock-accuracy = <30000000>;
+			};
+
+			main_osc:main_osc{
+				compatible = "atmel,at91sam9-clk-main-osc";
+				#clock-cells = <0>;
+				clocks = <&main_xtal>;
+			};
+
+			main_clk:main_clk{
+				compatible = "atmel,at91sam9-clk-main";
+				#clock-cells = <0>;
+				clocks = <&main_rc_osc>,<&main_osc>;
+			};
+
+			plla_clk:plla_clk{
+				compatible = "atmel,at91sam9-clk-plla";
+				#clock-cells = <0>;
+				clocks = <&main_clk>;
+			};
+
+			plla_div_clk:plla_div_clk{
+				compatible = "atmel,at91sam9-clk-plla-div";
+				#clock-cells = <0>;
+				clocks = <&plla_clk>;
+			};
+
+			mck:mck{
+				compatible = "atmel,at91sam9-clk-mck";
+				#clock-cells = <0>;
+				clocks = <&slow_clk>,<&main_clk>,<&plla_div_clk>,<&upll_clk>;
+			};
+
+			mck_div:mck_div{
+				compatible = "atmel,at91sam9-clk-mck-div";
+				#clock-cells = <0>;
+				clocks = <&mck>;
+			};
+
+			upll_clk:upll_clk{
+				compatible = "atmel,at91sam9-clk-upll";
+				#clock-cells = <0>;
+			};
+		};
+
+	};
+
+	clock {
+		slow_xtal:slow_xtal {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <32768>;
+		};
+		
+		main_xtal:main_xtal{
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <12000000>;
+		};
+	};
+};

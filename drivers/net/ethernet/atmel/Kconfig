@@ -1,0 +1,22 @@
+config NET_VENDOR_ATMEL
+	bool "ATMEL devices"
+	default y
+	depends on ARM && ARCH_AT91SAM9
+	---help---
+          If you have a network (Ethernet) card belonging to this class, say Y.
+
+          Note that the answer to this question doesn't directly affect the
+          kernel: saying N will just cause the configurator to skip all
+          the questions about Atmel cards. If you say Y, you will be asked
+          for your specific card in the following questions.
+
+if NET_VENDOR_ATMEL	
+
+config AT91SAM9_EMAC
+	tristate "ATMEL AT91SAM9 Ethernet Mac Controller support"
+	depends on ARCH_AT91SAM9
+	help
+	  Enable support for the on-chip MAC controller on ATMEL AT91SAM9 MCUs.
+	  If you have a board based on such a MCU and wish to use DMA say Y
+	  here.
+endif	

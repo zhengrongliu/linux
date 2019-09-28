@@ -1,0 +1,8 @@
+config ARCH_AM335X
+	bool "TI AM335x series ARM Cortex A Platform"
+	depends on ARCH_MULTI_V7
+	select NEON
+	select PINCTRL
+	help
+		Support for TI ARM Cortex A Platform
+	

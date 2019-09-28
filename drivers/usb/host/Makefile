@@ -61,6 +61,10 @@ obj-$(CONFIG_USB_OHCI_HCD_LPC32XX)	+= ohci-nxp.o
 obj-$(CONFIG_USB_OHCI_HCD_PXA27X)	+= ohci-pxa27x.o
 obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
 
+obj-$(CONFIG_USB_VHCI_HCD)	+= vhci-hcd.o
+obj-$(CONFIG_USB_VHCI_HCD_PLATFORM)	+= vhci-platform.o
+obj-$(CONFIG_USB_VHCI_HCD_PCI)	+= vhci-pci.o
+
 obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
 obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
 obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
