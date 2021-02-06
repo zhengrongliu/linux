@@ -906,6 +906,13 @@ config SND_YMFPCI
 
 	  To compile this driver as a module, choose M here: the module
 	  will be called snd-ymfpci.
+	 
+ config SND_VIRTIO
+	tristate "Virtio Sound"
+	select SND_PCM
+	help
+	  Say Y here to include support for Virtio soundcards.
+
 
 endif	# SND_PCI
 

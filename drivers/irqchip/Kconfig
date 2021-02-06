@@ -333,7 +333,7 @@ config IRQ_AT91SAM9_AIC
 	  in ATMEL at91sam9.
 
 config IRQ_AM335X
-	bool "TI am335x soc irqchip support"
+	bool 
 	depends on ARCH_AM335X
 	select IRQ_DOMAIN
 	select GENERIC_IRQ_CHIP

@@ -85,7 +85,6 @@
 			clock-names = "fclk";
 			status = "disabled";
 		};
-
 		gpex:gpex_pcie@c0000000{
 			compatible = "pci-host-ecam-generic";
 			device_type = "pci";

@@ -1,0 +1,8 @@
+config DRM_VGPU
+	tristate "DRM Support for VGPU"
+	depends on DRM && VIRTIO 
+	select DRM_GEM_CMA_HELPER 
+	select DRM_KMS_CMA_HELPER
+	select VIDEOMODE_HELPERS
+	help
+	  Enable support for the VGPU
